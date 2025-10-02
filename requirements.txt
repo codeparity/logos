@@ -1,2 +1,2 @@
-"drawsvg~=2.0"
+"drawsvg[all]"
  
