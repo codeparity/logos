@@ -10,11 +10,21 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
+def test_colors(d: draw.Drawing):
+    start = 0
+    for i, value in enumerate(Dark):
+        y = (start + 1) * 10
+        start = start + 1
+        d.append(draw.Line(10, y, 390, y, stroke=value, stroke_width=10))
+
+
 def make_square_logos(d: draw.Drawing):
     x_33 = d.width // 3
     y_33 = d.height // 3
-
-    line = draw.Line(0, 0, d.width, d.height, stroke="black")
+    # test_colors(d)
+    bg = draw.Rectangle(0, 0, d.width, d.height, fill=Dark.bg, stroke=None)
+    d.append(bg)
+    line = draw.Line(0, 0, d.width, d.height, stroke=Dark.gray_91_pc, stoke_width=5)
     d.append(line)
 
 

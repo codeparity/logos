@@ -1,6 +1,7 @@
-from enum import Enum
+from enum import Enum, StrEnum
 
-class Light(Enum):
+
+class Light(StrEnum):
     gray_0_pc = "#000000"
     gray_10_pc = "#191919"
     gray_20_pc = "#333333"
@@ -43,7 +44,7 @@ class Light(Enum):
     gray_dim = "#7c6f64"
 
 
-class Dark(Enum):
+class Dark(StrEnum):
     gray_0_pc = "#000000"
     gray_10_pc = "#191919"
     gray_20_pc = "#333333"
