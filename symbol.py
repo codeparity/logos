@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 import os
 import drawsvg as draw
@@ -11,13 +12,14 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
-class Choice(draw.Rectangle):
-    def __init__(self, x, y, width, height, **kwargs):
-        super().__init__(x, y, width, height, **kwargs)
+@dataclass
+class Choice:
+    "a modal for choices of all squares"
 
-        # do calculations here
-        self.mid_x = x + width // 2
-        self.mid_y = y + height // 2
+    " doing a class thing to interact and update different choice squares"
+    id: int
+    rect: draw.Rectangle
+    state: bool
 
 
 def test_colors(d: draw.Drawing):
@@ -35,28 +37,39 @@ def test(d: draw.Drawing):
     d.append(p.M(0, 0).Q(x_33, y_33, 400, 300))
 
 
-def make_bg_squares(d: draw.Drawing):
+def make_square_logos(d: draw.Drawing):
+    # line = draw.Line(0, 0, d.width, d.height, stroke=Dark.fg, stoke_width=5)
     x_33 = d.width // 3
     y_33 = d.height // 3
     # test_colors(d)
     # Curve only (left)
-    bg = Choice(0, 0, d.width, d.height, fill=Dark.bg, stroke=None)
-    d.append(bg)
-    for x in range(0, d.width, x_33):
-        for y in range(0, d.height, y_33):
+    # bg = Choice(0, 0, d.width, d.height, fill=Dark.bg, stroke=None)
+    # d.append(bg)
+    choices = list()
+
+    rect_id = 0
+    for x in range(3):
+        for y in range(3):
+            rect_id = rect_id + 1
             rect = draw.Rectangle(
-                x, y, x + x_33, y + y_33, stroke=Dark.fg, stroke_width=1
+                x * x_33,
+                y * y_33,
+                x * x_33 + x_33,
+                y * y_33 + y_33,
+                stroke=Dark.fg,
+                stroke_width=1,
             )
-            d.append(rect)
+            choice = Choice(rect_id, rect, False)
+            choices.append(choice)
+            # log.debug(choice)
             # now draw the middle points
+
+    for choice in choices:
+        d.append(choice.rect)
+        log.debug(choice)
     test(d)
-
-
-def make_square_logos(d: draw.Drawing):
-    # line = draw.Line(0, 0, d.width, d.height, stroke=Dark.fg, stoke_width=5)
     # d.append(line)
     # test(d)
-    make_bg_squares(d)
 
 
 def create_svg(size: int, filename: str):
