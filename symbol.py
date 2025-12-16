@@ -34,7 +34,7 @@ def test(d: draw.Drawing):
     x_33 = d.width // 3
     y_33 = d.height // 3
     p = draw.Path(stroke=Dark.gray_40_pc, fill="none", stroke_width=1)
-    d.append(p.M(0, 0).Q(x_33, y_33, 400, 300))
+    d.append(p.M(65, 65).Q(200, 133, 200, 200))
 
 
 def make_square_logos(d: draw.Drawing):

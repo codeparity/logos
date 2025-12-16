@@ -12,5 +12,5 @@
 <rect x="266" y="0" width="399" height="133" stroke="#fbf1c7" stroke-width="1" />
 <rect x="266" y="133" width="399" height="266" stroke="#fbf1c7" stroke-width="1" />
 <rect x="266" y="266" width="399" height="399" stroke="#fbf1c7" stroke-width="1" />
-<path d="M0,0 Q133,133,400,300" stroke="#666666" fill="none" stroke-width="1" />
+<path d="M65,65 Q200,133,200,200" stroke="#666666" fill="none" stroke-width="1" />
 </svg>

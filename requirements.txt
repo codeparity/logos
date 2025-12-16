@@ -1,2 +1,3 @@
-"drawsvg[all]"
+drawsvg~=2.0
+reloadserver
  
