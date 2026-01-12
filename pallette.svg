@@ -22,7 +22,7 @@
 <path d="M10,170 L390,170" stroke="#504945" stroke-width="10" />
 <path d="M10,180 L390,180" stroke="#665c54" stroke-width="10" />
 <path d="M10,190 L390,190" stroke="#7c6f64" stroke-width="10" />
-<path d="M10,200 L390,200" stroke="#fbf1c7" stroke-width="10" />
+<path d="M10,200 L390,200" stroke="black " stroke-width="10" />
 <path d="M10,210 L390,210" stroke="#ebdbb2" stroke-width="10" />
 <path d="M10,220 L390,220" stroke="#d5c4a1" stroke-width="10" />
 <path d="M10,230 L390,230" stroke="#bdae93" stroke-width="10" />

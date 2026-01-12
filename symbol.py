@@ -77,6 +77,7 @@ def create_svg(size: int, filename: str):
     trans_form_cartesian = f"translate(0,{size}) scale(1,-1)"
     log.debug(trans_form_cartesian)
     d = draw.Drawing(size, size, transform=trans_form_cartesian)
+    # d = draw.Drawing(size, size, origin=(-200, -200))
     # d = draw.Drawing(size, size, transform="translate(0,400) scale(1,-1)")
     # transform='translate(0,100) scale(1,-1)'
     # d = draw.Drawing(size, size)
