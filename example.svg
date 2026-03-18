@@ -25,7 +25,7 @@
 <tspan dy="1.0em" dx="-1">text</tspan>
 </textPath></text>
 </g>
-<circle cx="60" cy="20" r="20" stroke-dasharray="73.30382858376184 52.35987755982988" stroke-dashoffset="-31.41592653589793" stroke="red" stroke-width="5" fill="red" fill-opacity="0.2" />
+<circle cx="60" cy="20" r="20" stroke-dasharray="73.30382858376184 52.35987755982988" stroke-dashoffset="-31.41592653589793" stroke="red" stroke-width="5" fill="black" fill-opacity="0.2" />
 <path d="M60.0,40.0 A20,20,0,1,1,70.0,2.679491924311229" stroke="green" stroke-width="3" fill="none" />
 <path d="M70.0,2.679491924311229 A20,20,0,1,0,60.0,40.0" stroke="blue" stroke-width="1" fill="black" fill-opacity="0.3" />
 <path d="M20,40 L20,27 L0,20" stroke="red" stroke-width="2" fill="none" marker-end="url(#d1)" />
