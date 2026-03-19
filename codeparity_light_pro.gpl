@@ -1,0 +1,31 @@
+GIMP Palette
+Name: Codeparity Gruvbox Light & Opacity
+Columns: 5
+#
+# Gruvbox Light Core Colors
+251 241 199	Bg (Hard)
+249 245 215	Bg (Soft)
+40  40  40 	Fg (Dark)
+189 174 147	Gray
+157 100 106	Red
+121 116 14 	Green
+181 118 20 	Yellow
+7  102 120 	Blue
+143 63  113	Purple
+66  113 113	Aqua
+175 58  3  	Orange
+#
+# Neutral Grey Ramp
+240 240 240	Grey 10
+210 210 210	Grey 20
+180 180 180	Grey 30
+150 150 150	Grey 40
+120 120 120	Grey 50
+90  90  90 	Grey 60
+60  60  60 	Grey 70
+30  30  30 	Grey 80
+10  10  10 	Grey 90
+#
+# Note: Inkscape .gpl files do not natively support 
+# alpha channels in the swatch file itself. 
+# Use the "Object Fill" menu to apply the percentages below.
