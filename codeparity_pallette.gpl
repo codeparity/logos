@@ -1,0 +1,15 @@
+GIMP Palette
+Name: Codeparity theme
+Columns: 5
+#
+# Grey Ramp (Dark to Light)
+25  25  25 	Grey 10
+50  50  50 	Grey 20
+75  75  75 	Grey 30
+100 100 100	Grey 40
+125 125 125	Grey 50
+150 150 150	Grey 60
+175 175 175	Grey 70
+200 200 200	Grey 80
+225 225 225	Grey 90
+#
