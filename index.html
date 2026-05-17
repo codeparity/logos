@@ -1,9 +1,50 @@
-<div data-theme="dark" style="background: var(--gb-dark-bg); color: var(--gb-dark-fg); padding: 20px;">
-    <h1>Gruvbox Dark Mode</h1>
-    <p style="color: var(--gb-dark-aqua);" class="op-50">
-        This is Aqua text at 50% opacity.
-    </p>
-    <button style="background: var(--gb-dark-orange); border: none; padding: 10px;">
-        Orange Button
-    </button>
-</div>
+<svg width="300" height="300" viewBox="0 0 100 100" style="background: #f9f9f9;">
+	<!-- The Curve -->
+	<g id="layer0" style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.263433;stroke-miterlimit:0;display:inline">
+		<rect id="cube" width="98" height="98" x="1" y="1" label="boundary square"/>
+	</g>
+	<g id="frame" inkscape:label="layer_frame" style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.268247;stroke-miterlimit:0;display:inline" sodipodi:insensitive="true">
+		<line x1="99" y1="33" x2="1" y2="33" id="horz_line1"/>
+		<line x1="99" y1="66" x2="1" y2="66" id="horz_line2"/>
+		<line x1="33" y1="1" x2="33" y2="99" id="vert_line1"/>
+		<line x1="66" y1="1" x2="66" y2="99" id="vert_line2"/>
+	</g>
+	<g id="points" label="layer_points" style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.264999;stroke-miterlimit:0;stroke-dasharray:none">
+		<circle cx="49" cy="49" r="3" id="circle_neutral"/>
+		<circle cx="49" cy="16" r="3" id="circle_jump"/>
+		<circle cx="49" cy="82" r="3" id="circle_down"/>
+		<circle cx="16" cy="16" r="3" id="circle_back_jump"/>
+		<circle cx="82" cy="16" r="3" id="circle_fwd_jump"/>
+		<circle cx="16" cy="49" r="3" id="circle_back"/>
+		<circle cx="82" cy="49" r="3" id="circle_fwd"/>
+		<circle cx="16" cy="82" r="3" id="circle_back_down"/>
+		<circle cx="82" cy="82" r="3" id="circle_fwd_down"/>
+	</g>
+	<g id="flow" style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.264999;stroke-miterlimit:0">
+		<!-- The flow - construction -->
+		<!-- flow 1 : feeling to discover - good -> how -> why -->
+		<path d="M 52 16 Q 66 10 79 16" fill="white"/>
+		<path d="M 19 82 Q 33 88 46 82" fill="none"/>
+		<path d="M 49 46 Q 43 33 49 19" fill="none"/>
+		<path d="M 49 52 Q 55 66 49 79" fill="none"/>
+		<!-- balance  -->
+		<path d="M 52 16 Q 66 22 79 16" fill="none"/>
+		<path d="M 19 82 Q 33 76 46 82" fill="none"/>
+		<path d="M 49 46 Q 55 33 49 19" fill="none"/>
+		<path d="M 49 52 Q 42 66 49 79" fill="none"/>
+
+		<!-- The flow 2- destruction -->
+		<!-- flow 1 : feeling to discover - byd -> how -> why -->
+		<path d="M 16 19 Q 10 33 16 46" fill="none"/>
+		<path d="M 19 49 Q 33 55 46 49" fill="none"/>
+		<path d="M 52 49 Q 66 43 79 49" fill="none"/>
+		<path d="M 82 52 Q 88 66 82 79" fill="none"/>
+		<!-- balance -->
+		<path d="M 16 19 Q 22 33 16 46" fill="none"/>
+		<path d="M 19 49 Q 33 42 46 49" fill="none"/>
+		<path d="M 52 49 Q 66 55 79 49" fill="none"/>
+		<path d="M 82 52 Q 76 66 82 79" fill="none"/>
+	</g>
+
+	<!-- Visualization of Points (Optional) -->
+</svg>

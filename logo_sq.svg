@@ -25,14 +25,14 @@
      inkscape:document-units="px"
      showgrid="true"
      inkscape:zoom="1.9451216"
-     inkscape:cx="163.22887"
-     inkscape:cy="124.15676"
+     inkscape:cx="82.000015"
+     inkscape:cy="124.67087"
      inkscape:window-width="1920"
      inkscape:window-height="1000"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="flow">
+     inkscape:current-layer="layer0">
     <inkscape:grid
        type="xygrid"
        id="grid247" />
@@ -44,7 +44,7 @@
      inkscape:groupmode="layer"
      id="layer0"
      sodipodi:insensitive="true"
-     style="display:none">
+     style="display:inline">
     <rect
        style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.263433;stroke-miterlimit:0"
        id="cube"
@@ -57,7 +57,9 @@
   <g
      inkscape:groupmode="layer"
      id="frame"
-     inkscape:label="layer_frame">
+     inkscape:label="layer_frame"
+     style="display:inline"
+     sodipodi:insensitive="true">
     <line
        x1="33"
        y1="2"
@@ -90,7 +92,8 @@
   <g
      inkscape:groupmode="layer"
      id="points"
-     inkscape:label="layer_points">
+     inkscape:label="layer_points"
+     sodipodi:insensitive="true">
     <circle
        cx="16"
        cy="16"
