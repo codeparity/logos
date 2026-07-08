@@ -1,50 +1,550 @@
-<svg width="300" height="300" viewBox="0 0 100 100" style="background: #f9f9f9;">
-	<!-- The Curve -->
-	<g id="layer0" style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.263433;stroke-miterlimit:0;display:inline">
-		<rect id="cube" width="98" height="98" x="1" y="1" label="boundary square"/>
-	</g>
-	<g id="frame" inkscape:label="layer_frame" style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.1;stroke-miterlimit:0;display:inline" sodipodi:insensitive="true">
-		<line x1="99" y1="33" x2="1" y2="33" id="horz_line1"/>
-		<line x1="99" y1="66" x2="1" y2="66" id="horz_line2"/>
-		<line x1="33" y1="1" x2="33" y2="99" id="vert_line1"/>
-		<line x1="66" y1="1" x2="66" y2="99" id="vert_line2"/>
-	</g>
-	<g id="points" label="layer_points" style="fill:white;stroke:#71706c;stroke-width:0.264999;stroke-miterlimit:0;stroke-dasharray:none">
-		<circle cx="49" cy="49" r="3" id="circle_neutral"/>
-		<circle cx="49" cy="16" r="3" id="circle_jump"/>
-		<circle cx="49" cy="82" r="3" id="circle_down"/>
-		<circle cx="16" cy="16" r="3" id="circle_back_jump"/>
-		<circle cx="82" cy="16" r="3" id="circle_fwd_jump"/>
-		<circle cx="16" cy="49" r="3" id="circle_back"/>
-		<circle cx="82" cy="49" r="3" id="circle_fwd"/>
-		<circle cx="16" cy="82" r="3" id="circle_back_down"/>
-		<circle cx="82" cy="82" r="3" id="circle_fwd_down"/>
-	</g>
-	<g id="flow" style="fill:#e1e1e1;stroke:#71706c;stroke-width:0.2;stroke-miterlimit:0">
-		<!-- The flow - construction -->
-		<!-- flow 1 : feeling to discover - good -> how -> why -->
-		<path d="M 52 16 Q 66 10 79 16"/>
-		<path d="M 19 82 Q 33 88 46 82"/>
-		<path d="M 49 46 Q 43 33 49 19"/>
-		<path d="M 49 52 Q 55 66 49 79"/>
-		<!-- balance  -->
-		<path d="M 52 16 Q 66 22 79 16"/>
-		<path d="M 19 82 Q 33 76 46 82"/>
-		<path d="M 49 46 Q 55 33 49 19"/>
-		<path d="M 49 52 Q 42 66 49 79"/>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codeparity — The Religion of 9 Choices</title>
+<meta name="description" content="Nine live choices, always running. A doorway to the book — coming soon at codeparity.com.">
+<style>
+  /* Grey ramp — codeparity_pallette.gpl */
+  :root {
+    --g10: #191919;  /* ink        */
+    --g30: #4b4b4b;  /* line       */
+    --g60: #969696;  /* quiet      */
+    --g90: #e1e1e1;  /* structure  */
+    --g95: #f4f4f4;  /* paper      */
+  }
 
-		<!-- The flow 2- destruction -->
-		<!-- flow 1 : feeling to discover - byd -> how -> why -->
-		<path d=" M 16 19 Q 10 33 16 46"/>
-		<path d="M 19 49 Q 33 55 46 49"/>
-		<path d="M 52 49 Q 66 43 79 49"/>
-		<path d="M 82 52 Q 88 66 82 79"/>
-		<!-- balance -->
-		<path d="M 16 19 Q 22 33 16 46"/>
-		<path d="M 19 49 Q 33 42 46 49"/>
-		<path d="M 52 49 Q 66 55 79 49"/>
-		<path d="M 82 52 Q 76 66 82 79"/>
-	</g>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-	<!-- Visualization of Points (Optional) -->
-</svg>
+  html, body { height: 100%; }
+  body {
+    background: var(--g95);
+    color: var(--g10);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .mono {
+    font-family: ui-monospace, 'Cascadia Mono', 'JetBrains Mono', Menlo, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--g60);
+  }
+
+  /* ---------- the one screen ---------- */
+
+  .screen {
+    height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 6rem);
+    padding: clamp(1.5rem, 4vh, 3.5rem) clamp(1.5rem, 5vw, 5.5rem);
+    max-width: 110rem;
+    margin: 0 auto;
+  }
+
+  /* ---------- left · the symbol ---------- */
+
+  .symbol-side {
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    max-width: min(42rem, 82vh);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+  .axis-top {
+    grid-column: 2;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+  }
+  .axis-left {
+    grid-row: 2;
+    display: grid; grid-template-rows: repeat(3, 1fr);
+    align-items: center;
+  }
+  .axis-left span { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; }
+
+  .symbol-side svg { grid-column: 2; grid-row: 2; width: 100%; height: auto; display: block; }
+
+  /* logo styling — geometry from logos.svg */
+  .logo .frame  { stroke: var(--g90); stroke-width: 0.5; }
+  .logo .cube   { fill: none; stroke: var(--g30); stroke-width: 0.7; }
+  .logo .points { fill: var(--g95); stroke: var(--g10); stroke-width: 0.9; }
+  .logo .flow   { fill: none; stroke: var(--g10); stroke-width: 0.6; stroke-linecap: round; }
+  .logo .neutral { fill: var(--g10); }
+  .logo .points circle.lit { fill: var(--g10); }
+
+  .logo .cells rect { fill: transparent; cursor: pointer; outline: none; }
+  .logo .cells rect:hover,
+  .logo .cells rect:focus-visible,
+  .logo .cells rect.on { fill: var(--g90); mix-blend-mode: multiply; }
+
+  /* the symbol assembles from the Neutral Now outward:
+     centre point → inner arms → mid points → outer arms → corner points.
+     .rev flips the draw direction on paths authored toward the centre. */
+  @media (prefers-reduced-motion: no-preference) {
+    .logo .flow path {
+      stroke-dasharray: 34;
+      stroke-dashoffset: 34;
+      animation: draw 1.1s ease-out forwards;
+      animation-delay: 0.35s;
+    }
+    .logo .flow path.rev { stroke-dashoffset: -34; }
+    .logo .flow path.outer { animation-delay: 1.4s; }
+
+    .logo .points circle { opacity: 0; animation: appear 0.4s ease-out forwards; }
+    .logo .points .neutral { animation-delay: 0.05s; }
+    .logo .points .mid    { animation-delay: 1.25s; }
+    .logo .points .corner { animation-delay: 2.3s; }
+
+    @keyframes draw   { to { stroke-dashoffset: 0; } }
+    @keyframes appear { to { opacity: 1; } }
+  }
+
+  /* ---------- right · the panel ---------- */
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-width: 36rem;
+  }
+
+  .pnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--g90);
+  }
+  .pnav button {
+    font: inherit;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    background: none; border: none; cursor: pointer;
+    color: var(--g60);
+    padding: 0.2rem 0;
+    border-bottom: 1px solid transparent;
+  }
+  .pnav button:hover { color: var(--g10); }
+  .pnav button.active { color: var(--g10); border-bottom-color: var(--g10); }
+
+  .pbody {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: 2rem 0;
+    opacity: 1;
+    transition: opacity 0.16s ease-out;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .pbody::-webkit-scrollbar { display: none; }
+  .pbody.fade { opacity: 0; }
+  .pbody > .inner { margin: auto 0; }
+
+  .pbody h1 {
+    font-weight: normal;
+    font-size: 1.05rem;
+    font-family: ui-monospace, Menlo, monospace;
+    letter-spacing: 0.42em; text-transform: uppercase;
+  }
+  .pbody h2 { font-weight: normal; font-size: 1.35rem; margin: 0.5rem 0 1.2rem; }
+  .pbody .sub { color: var(--g60); font-style: italic; margin-top: 0.6rem; }
+  .pbody p + p { margin-top: 1em; }
+  .pbody em { color: var(--g30); }
+
+  .thesis { margin: 1.8rem 0; font-size: 1.45rem; font-style: italic; line-height: 1.4; }
+
+  .kicker { display: block; margin-bottom: 0.4rem; }
+  .ask { margin-top: 1.8rem; }
+  .prompt { font-size: 1.25rem; font-style: italic; line-height: 1.45; margin-top: 0.5rem; }
+
+  .booklink { color: inherit; }
+  .booklink:hover { color: var(--g30); }
+
+  .chapter { margin-top: 1.8rem; color: var(--g60); font-size: 0.9rem; font-style: italic; }
+  .chapter a { color: var(--g30); }
+
+  dl.list dt {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+    margin-top: 1.3rem;
+  }
+  dl.list dd { color: var(--g30); margin-top: 0.15rem; }
+  dl.gloss dt { font-family: inherit; font-style: italic; font-size: 1rem;
+    letter-spacing: 0; text-transform: none; margin-top: 1.1rem; }
+
+  ol.parts { list-style: none; }
+  ol.parts li { padding: 0.55rem 0; border-bottom: 1px solid var(--g90); display: flex; gap: 1.2rem; align-items: baseline; }
+  ol.parts .n { font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem; color: var(--g60); }
+  ol.parts .chapters { display: block; color: var(--g60); font-size: 0.85rem; font-style: italic; }
+
+  /* ---------- panel foot ---------- */
+
+  .pfoot {
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--g90);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .design-btn {
+    color: var(--g10);
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--g10);
+    padding: 0.8rem 1.4rem;
+    transition: background 0.25s, color 0.25s;
+  }
+  .design-btn:hover { background: var(--g10); color: var(--g95); }
+  .pfoot .book {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--g60); text-decoration: none;
+  }
+  .pfoot .book:hover { color: var(--g10); }
+
+  /* ---------- small screens: allow scroll ---------- */
+
+  @media (max-width: 880px) {
+    body { overflow: auto; }
+    .screen {
+      height: auto;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .symbol-side { max-width: 30rem; }
+    .pbody { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <!-- ============ left · the symbol ============ -->
+  <div class="symbol-side">
+    <div class="axis-top mono"><span>past</span><span>now</span><span>future</span></div>
+    <div class="axis-left mono"><span>why</span><span>how</span><span>feels</span></div>
+
+    <svg class="logo" viewBox="0 0 100 100" role="group"
+         aria-label="The Codeparity grid: nine clickable boxes — three layers of self by three moments of time">
+      <rect class="cube" width="98" height="98" x="1" y="1"/>
+      <g class="frame">
+        <line x1="99" y1="33" x2="1" y2="33"/>
+        <line x1="99" y1="66" x2="1" y2="66"/>
+        <line x1="33" y1="1" x2="33" y2="99"/>
+        <line x1="66" y1="1" x2="66" y2="99"/>
+      </g>
+      <g class="flow">
+        <!-- inner arms — out of the centre -->
+        <path class="inner" d="M 49 46 Q 43 33 49 19"/>
+        <path class="inner" d="M 49 46 Q 55 33 49 19"/>
+        <path class="inner" d="M 49 52 Q 55 66 49 79"/>
+        <path class="inner" d="M 49 52 Q 42 66 49 79"/>
+        <path class="inner rev" d="M 19 49 Q 33 55 46 49"/>
+        <path class="inner rev" d="M 19 49 Q 33 42 46 49"/>
+        <path class="inner" d="M 52 49 Q 66 43 79 49"/>
+        <path class="inner" d="M 52 49 Q 66 55 79 49"/>
+        <!-- outer arms — the turn -->
+        <path class="outer" d="M 52 16 Q 66 10 79 16"/>
+        <path class="outer" d="M 52 16 Q 66 22 79 16"/>
+        <path class="outer rev" d="M 19 82 Q 33 88 46 82"/>
+        <path class="outer rev" d="M 19 82 Q 33 76 46 82"/>
+        <path class="outer rev" d="M 16 19 Q 10 33 16 46"/>
+        <path class="outer rev" d="M 16 19 Q 22 33 16 46"/>
+        <path class="outer" d="M 82 52 Q 88 66 82 79"/>
+        <path class="outer" d="M 82 52 Q 76 66 82 79"/>
+      </g>
+      <g class="points">
+        <circle class="corner" cx="16" cy="16" r="3"/>
+        <circle class="mid" cx="49" cy="16" r="3"/>
+        <circle class="corner" cx="82" cy="16" r="3"/>
+        <circle class="mid" cx="16" cy="49" r="3"/>
+        <circle class="neutral" cx="49" cy="49" r="3"/>
+        <circle class="mid" cx="82" cy="49" r="3"/>
+        <circle class="corner" cx="16" cy="82" r="3"/>
+        <circle class="mid" cx="49" cy="82" r="3"/>
+        <circle class="corner" cx="82" cy="82" r="3"/>
+      </g>
+      <g class="cells">
+        <rect data-cell="why-past"     x="1"  y="1"  width="32" height="32"/>
+        <rect data-cell="why-now"      x="33" y="1"  width="33" height="32"/>
+        <rect data-cell="why-future"   x="66" y="1"  width="33" height="32"/>
+        <rect data-cell="how-past"     x="1"  y="33" width="32" height="33"/>
+        <rect data-cell="how-now"      x="33" y="33" width="33" height="33"/>
+        <rect data-cell="how-future"   x="66" y="33" width="33" height="33"/>
+        <rect data-cell="feels-past"   x="1"  y="66" width="32" height="33"/>
+        <rect data-cell="feels-now"    x="33" y="66" width="33" height="33"/>
+        <rect data-cell="feels-future" x="66" y="66" width="33" height="33"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ============ right · the panel ============ -->
+  <div class="panel">
+    <nav class="pnav" aria-label="Sections">
+      <button data-view="home" class="active">the symbol</button>
+      <button data-view="premise">the premise</button>
+      <button data-view="symbols">six symbols</button>
+      <button data-view="book">the book</button>
+      <button data-view="vocab">vocabulary</button>
+    </nav>
+
+    <div class="pbody" id="pbody"></div>
+
+    <div class="pfoot">
+      <a class="design-btn" href="design.html">Design your own symbol &rarr;</a>
+      <span class="book">the book &mdash; coming soon</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+const BOOK = '<em>codeparity.com</em>';
+
+/* ---------------- panel views ---------------- */
+
+const VIEWS = {
+  home: `
+    <h1>Codeparity</h1>
+    <p class="sub">The religion of 9 choices</p>
+    <p class="thesis">Discover the nine choices<br>you&rsquo;re making right now.</p>
+    <p>Time runs left to right &mdash; <em>past, now, future</em>.
+       The self runs top to bottom &mdash; <em>why, how, feels</em>.
+       Nine boxes, always running. Eight of them are stories.</p>
+    <p><span class="mono">click any box &mdash;</span></p>
+    <p class="chapter">This page is the doorway. The book is coming soon at ${BOOK}.</p>`,
+
+  premise: `
+    <span class="mono kicker">the premise</span>
+    <h2>Parity, not happiness</h2>
+    <p>A religion is just a system that tells you what to do with your
+       time, and why. This one says so upfront.</p>
+    <p>The goal is not happiness &mdash; dopamine, a moving target. The
+       goal is <em>parity</em>: balance with your environment. You are
+       born in debt to <em>habitus</em>, the code you did not write. The
+       practice is debugging that inheritance, one live choice at a time.</p>
+    <p><em>&ldquo;I didn&rsquo;t set out to found a religion. I set out to fix a bug
+       in my own head. The fix turned out to be general-purpose enough to
+       run on anyone.&rdquo;</em></p>
+    <p class="chapter">The whole diagnosis lives in the book &mdash; coming soon at ${BOOK}.</p>`,
+
+  symbols: `
+    <span class="mono kicker">how to read it</span>
+    <h2>Six symbols. Everything else is commentary.</h2>
+    <dl class="list">
+      <dt>The Grid</dt>
+      <dd>Three layers of self &times; three moments of time. Nine live choices, always running.</dd>
+      <dt>The Torus</dt>
+      <dd>The grid, breathing. The Neutral Now sits at its still centre.</dd>
+      <dt>0 and 1</dt>
+      <dd>Not a fraction &mdash; a relationship. 0 the undivided source, 1 the first &ldquo;me.&rdquo;</dd>
+      <dt>Saturn &middot; Earth &middot; Sun &middot; God</dt>
+      <dd>Four stacked fathers. The last one settles the ledger.</dd>
+      <dt>The Dog</dt>
+      <dd>A literal street dog. Layer 0, run honestly.</dd>
+      <dt>Death, the last debug</dt>
+      <dd>The last commit. Whatever was running when the terminal closed is what got saved.</dd>
+    </dl>`,
+
+  book: `
+    <span class="mono kicker">the book</span>
+    <h2>Sixteen chapters, five parts</h2>
+    <ol class="parts">
+      <li><span class="n">01</span><span>Symbols
+        <span class="chapters">how to read this book</span></span></li>
+      <li><span class="n">02</span><span>The Diagnosis
+        <span class="chapters">happiness is the wrong question &middot; habitus &middot; the duality trap</span></span></li>
+      <li><span class="n">03</span><span>The Method
+        <span class="chapters">the grid &middot; zero and one &middot; karma and karm &middot; the layering of god &middot; the torus &middot; the dog</span></span></li>
+      <li><span class="n">04</span><span>The Practice
+        <span class="chapters">becoming 0 &middot; the emotion wheel &middot; reclaiming the neutral now &middot; nodes and signal &middot; timing and collapse</span></span></li>
+      <li><span class="n">05</span><span>Death and Closing
+        <span class="chapters">death, the last debug &middot; nine choices, four fathers, one ledger</span></span></li>
+    </ol>
+    <p class="chapter">In the works &mdash; coming soon at ${BOOK}.</p>`,
+
+  vocab: `
+    <span class="mono kicker">vocabulary</span>
+    <h2>Kept as-is, edges on</h2>
+    <dl class="list gloss">
+      <dt>habitus</dt>
+      <dd>The pre-set inputs you&rsquo;re born into; the code you didn&rsquo;t write.</dd>
+      <dt>karm / karma / dharma</dt>
+      <dd>An action; its abstract result; purpose chosen on purpose.</dd>
+      <dt>neutral now</dt>
+      <dd>The one live box; where soul is lost to ego or reclaimed by attention.</dd>
+      <dt>baldies</dt>
+      <dd>Running the Middle-Class Algorithm flawlessly, without noticing it&rsquo;s an algorithm.</dd>
+      <dt>sigma</dt>
+      <dd>The archetype who breaks the loop.</dd>
+      <dt>matrix 6 / 6G</dt>
+      <dd>Engineered for the <em>feeling</em> of choice rather than its removal.</dd>
+    </dl>`,
+};
+
+/* ---------------- the nine boxes ---------------- */
+
+const CELLS = {
+  'why-past': {
+    name: 'why · past', title: 'the reason you inherited',
+    body: `Habitus. The why that was installed before you could ask
+           questions &mdash; family, class, the algorithm around you. It
+           feels like conviction because it compiled long ago.`,
+    ask: 'Whose reason are you running right now — yours, or one you were handed?',
+    ch: 'Habitus' },
+  'why-now': {
+    name: 'why · now', title: 'purpose chosen on purpose',
+    body: `Dharma. Not a mission statement &mdash; a why you could say out
+           loud today without flinching. The only why that counts is one
+           chosen while the box is live.`,
+    ask: 'Say why you’re doing this, out loud. Does the sentence survive?',
+    ch: 'Karma and Karm' },
+  'why-future': {
+    name: 'why · future', title: 'the reason you rehearse',
+    body: `The imagined justification. A why that lives in tomorrow is a
+           debt note: it spends today defending a self that does not
+           exist yet.`,
+    ask: 'How much of today went to defending a tomorrow that never asked?',
+    ch: 'Happiness Is the Wrong Question' },
+  'how-past': {
+    name: 'how · past', title: 'the way it was done to you',
+    body: `Method is inherited harder than opinion. You cook, argue,
+           apologise and avoid the way it was done around you &mdash; code
+           you didn&rsquo;t write, still running.`,
+    ask: 'Which of your habits is actually someone else’s?',
+    ch: 'Habitus' },
+  'how-now': {
+    name: 'how · now', title: 'the Neutral Now — the one live box',
+    body: `The fulcrum. Eight boxes are stories; this is the only one
+           where anything can actually be done. Here soul is lost to ego,
+           or reclaimed by attention.`,
+    ask: 'You are reading this from the one live box. What else is running in it?',
+    ch: 'Reclaiming the Neutral Now' },
+  'how-future': {
+    name: 'how · future', title: 'the plan standing in for the act',
+    body: `Planning feels like motion because it borrows the reward
+           before the work. A plan is a promissory note the Now has to
+           pay.`,
+    ask: 'What is the smallest piece you could do before this feeling fades?',
+    ch: 'Timing and Collapse' },
+  'feels-past': {
+    name: 'feels · past', title: 'feeling replayed',
+    body: `Nostalgia and regret are the same tape at different speeds. A
+           replayed feeling arrives pre-narrated &mdash; the story is
+           already attached.`,
+    ask: 'Is this feeling arriving, or being replayed?',
+    ch: 'The Emotion Wheel' },
+  'feels-now': {
+    name: 'feels · now', title: 'feeling without a story on top',
+    body: `Layer 0, run honestly &mdash; what the dog does. A feeling met
+           in the now needs no defence, no narrator, no verdict. Ten
+           seconds of it is practice.`,
+    ask: 'Can you hold it for ten seconds without narrating it?',
+    ch: 'The Dog' },
+  'feels-future': {
+    name: 'feels · future', title: 'feeling borrowed from tomorrow',
+    body: `Anxiety is interest paid on a loan you may never take out. The
+           body pays now for a scene that exists only as rehearsal.`,
+    ask: 'How does your body feel right now, minus tomorrow?',
+    ch: 'Becoming 0' },
+};
+
+function cellHTML(c) {
+  return `
+    <span class="mono kicker">${c.name}</span>
+    <h2>${c.title}</h2>
+    <p>${c.body}</p>
+    <p class="mono ask">ask yourself</p>
+    <p class="prompt">${c.ask}</p>
+    <p class="chapter">Unpacked in <em>${c.ch}</em> &mdash; a chapter of the book, coming soon.</p>`;
+}
+
+/* ---------------- wiring ---------------- */
+
+const pbody = document.getElementById('pbody');
+const navBtns = document.querySelectorAll('.pnav button');
+const cellRects = document.querySelectorAll('.cells rect');
+const circles = document.querySelectorAll('.logo .points circle');
+const CIRCLE_OF = ['why-past','why-now','why-future','how-past','how-now',
+                   'how-future','feels-past','feels-now','feels-future'];
+let activeCell = null;
+
+function setPanel(html) {
+  pbody.classList.add('fade');
+  setTimeout(() => {
+    pbody.innerHTML = '<div class="inner">' + html + '</div>';
+    pbody.scrollTop = 0;
+    pbody.classList.remove('fade');
+  }, 160);
+}
+
+function clearCell() {
+  activeCell = null;
+  cellRects.forEach(r => r.classList.remove('on'));
+  circles.forEach(c => c.classList.remove('lit'));
+}
+
+function setNav(view) {
+  navBtns.forEach(b => b.classList.toggle('active', b.dataset.view === view));
+}
+
+function showView(view) {
+  clearCell();
+  setNav(view);
+  setPanel(VIEWS[view]);
+}
+
+function showCell(key) {
+  if (activeCell === key) { showView('home'); return; }
+  clearCell();
+  setNav(null);
+  activeCell = key;
+  document.querySelector(`.cells rect[data-cell="${key}"]`).classList.add('on');
+  circles[CIRCLE_OF.indexOf(key)].classList.add('lit');
+  setPanel(cellHTML(CELLS[key]));
+}
+
+navBtns.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+
+cellRects.forEach(r => {
+  r.setAttribute('tabindex', '0');
+  r.setAttribute('role', 'button');
+  r.setAttribute('aria-label', CELLS[r.dataset.cell].name + ' — ' + CELLS[r.dataset.cell].title);
+  r.addEventListener('click', () => showCell(r.dataset.cell));
+  r.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showCell(r.dataset.cell); }
+  });
+});
+
+// deep links: #book, #premise, #why-past, #feels-now, …
+const hash = location.hash.slice(1);
+if (CELLS[hash]) {
+  activeCell = hash;
+  setNav(null);
+  document.querySelector(`.cells rect[data-cell="${hash}"]`).classList.add('on');
+  circles[CIRCLE_OF.indexOf(hash)].classList.add('lit');
+  pbody.innerHTML = '<div class="inner">' + cellHTML(CELLS[hash]) + '</div>';
+} else {
+  const view = VIEWS[hash] ? hash : 'home';
+  setNav(view);
+  pbody.innerHTML = '<div class="inner">' + VIEWS[view] + '</div>';
+}
+</script>
+</body>
+</html>

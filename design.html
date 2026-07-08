@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design your symbol — Codeparity</title>
+<meta name="description" content="Style the Codeparity grid in your own terminal colorscheme. Download your symbol and the brochure in your theme.">
+<style>
+  /* Grey ramp — codeparity_pallette.gpl */
+  :root {
+    --g10: #191919;
+    --g30: #4b4b4b;
+    --g60: #969696;
+    --g90: #e1e1e1;
+    --g95: #f4f4f4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+  body {
+    background: var(--g95);
+    color: var(--g10);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .mono {
+    font-family: ui-monospace, 'Cascadia Mono', 'JetBrains Mono', Menlo, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--g60);
+  }
+
+  /* ---------- the one screen ---------- */
+
+  .screen {
+    height: 100dvh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 6rem);
+    padding: clamp(1.5rem, 4vh, 3.5rem) clamp(1.5rem, 5vw, 5.5rem);
+    max-width: 110rem;
+    margin: 0 auto;
+  }
+
+  /* ---------- left · the preview ---------- */
+
+  .symbol-side {
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    max-width: min(42rem, 82vh);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+  .axis-top {
+    grid-column: 2;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+  }
+  .axis-left {
+    grid-row: 2;
+    display: grid; grid-template-rows: repeat(3, 1fr);
+    align-items: center;
+  }
+  .axis-left span { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; }
+
+  .preview {
+    grid-column: 2; grid-row: 2;
+    border: 1px solid var(--g90);
+    aspect-ratio: 1;
+  }
+  .preview svg { width: 100%; height: 100%; display: block; }
+
+  /* ---------- right · the panel ---------- */
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-width: 36rem;
+  }
+
+  .phead { padding-bottom: 1.2rem; }
+  .phead h1 { font-weight: normal; font-size: 1.5rem; margin-top: 0.3rem; }
+  .phead .sub { color: var(--g60); font-style: italic; }
+
+  .pnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--g90);
+  }
+  .pnav button {
+    font: inherit;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    background: none; border: none; cursor: pointer;
+    color: var(--g60);
+    padding: 0.2rem 0;
+    border-bottom: 1px solid transparent;
+  }
+  .pnav button:hover { color: var(--g10); }
+  .pnav button.active { color: var(--g10); border-bottom-color: var(--g10); }
+
+  .pbody {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: 1.8rem 0;
+    opacity: 1;
+    transition: opacity 0.16s ease-out;
+  }
+  .pbody::-webkit-scrollbar { display: none; }
+  .pbody.fade { opacity: 0; }
+
+  .pbody h2 { font-weight: normal; font-size: 1.35rem; margin: 0.4rem 0 1.4rem; }
+  .kicker { display: block; }
+
+  /* schemes */
+  .schemes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+    gap: 0.4rem;
+  }
+  .scheme {
+    display: flex; align-items: center; gap: 0.7rem;
+    border: 1px solid var(--g90);
+    background: none;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.75rem;
+    color: var(--g30);
+    text-align: left;
+  }
+  .scheme:hover { border-color: var(--g60); }
+  .scheme.active { border-color: var(--g10); color: var(--g10); }
+  .scheme .strip { display: flex; flex: none; }
+  .scheme .strip i { width: 0.6rem; height: 0.85rem; display: block; }
+
+  /* layers */
+  .layers { display: flex; flex-direction: column; gap: 1.1rem; }
+  .layer .name {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--g30);
+    margin-bottom: 0.35rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .layer .name i {
+    width: 0.85rem; height: 0.85rem; display: inline-block;
+    border: 1px solid var(--g60);
+  }
+  .layer .swatches { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+  .swatch {
+    width: 1.35rem; height: 1.35rem;
+    border: 1px solid var(--g90);
+    padding: 0; cursor: pointer;
+  }
+  .swatch:hover { border-color: var(--g30); }
+  .swatch.on { outline: 2px solid var(--g10); outline-offset: 1px; border-color: var(--g95); }
+  .layer input[type="color"] {
+    width: 1.35rem; height: 1.35rem;
+    border: 1px dashed var(--g60); background: none;
+    padding: 0; cursor: pointer;
+  }
+
+  /* ---------- panel foot ---------- */
+
+  .pfoot {
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--g90);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+  }
+  .dls { display: flex; align-items: center; gap: 0.4rem 1.2rem; flex-wrap: wrap; }
+  .dls button {
+    font: inherit;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    background: none; cursor: pointer;
+    transition: background 0.25s, color 0.25s;
+  }
+  .dls .primary {
+    color: var(--g10);
+    border: 1px solid var(--g10);
+    padding: 0.8rem 1.2rem;
+  }
+  .dls .primary:hover { background: var(--g10); color: var(--g95); }
+  .dls .quiet { border: none; color: var(--g60); padding: 0.2rem 0; }
+  .dls .quiet:hover { color: var(--g10); }
+
+  .pfoot .back {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--g60); text-decoration: none;
+  }
+  .pfoot .back:hover { color: var(--g10); }
+
+  /* ---------- small screens: allow scroll ---------- */
+
+  @media (max-width: 880px) {
+    body { overflow: auto; }
+    .screen {
+      height: auto;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .symbol-side { max-width: 30rem; }
+    .pbody { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <!-- ============ left · the preview ============ -->
+  <div class="symbol-side">
+    <div class="axis-top mono"><span>past</span><span>now</span><span>future</span></div>
+    <div class="axis-left mono"><span>why</span><span>how</span><span>feels</span></div>
+    <div class="preview" id="preview"></div>
+  </div>
+
+  <!-- ============ right · the panel ============ -->
+  <div class="panel">
+    <div class="phead">
+      <span class="mono">codeparity &middot; your terminal</span>
+      <h1>Design your symbol</h1>
+      <p class="sub">Nine choices, in the colors your terminal already taught you.</p>
+    </div>
+
+    <nav class="pnav" aria-label="Sections">
+      <button data-tab="scheme" class="active">colorscheme</button>
+      <button data-tab="layers">layers</button>
+    </nav>
+
+    <div class="pbody" id="pbody"></div>
+
+    <div class="pfoot">
+      <div class="dls">
+        <button id="dl-brochure" class="primary">&darr; brochure &middot; your theme</button>
+        <button id="dl-svg" class="quiet">svg</button>
+        <button id="dl-png" class="quiet">png</button>
+      </div>
+      <a class="back" href="index.html">&larr; the symbol</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+/* ---------------- data ---------------- */
+
+// palette: [bg, fg, red, green, yellow, blue, magenta, cyan, orange, gray]
+const SCHEMES = [
+  { key: 'greyscale', name: 'greyscale (default)',
+    palette: ['#f4f4f4','#191919','#323232','#4b4b4b','#646464','#7d7d7d','#969696','#afafaf','#c8c8c8','#e1e1e1'],
+    map: { paper:'#f4f4f4', frame:'#4b4b4b', points:'#191919', neutral:'#191919', flow:'#191919' } },
+  { key: 'gruvbox', name: 'gruvbox dark',
+    palette: ['#282828','#ebdbb2','#cc241d','#98971a','#d79921','#458588','#b16286','#689d6a','#d65d0e','#928374'] },
+  { key: 'nord', name: 'nord',
+    palette: ['#2e3440','#d8dee9','#bf616a','#a3be8c','#ebcb8b','#81a1c1','#b48ead','#88c0d0','#d08770','#4c566a'] },
+  { key: 'dracula', name: 'dracula',
+    palette: ['#282a36','#f8f8f2','#ff5555','#50fa7b','#f1fa8c','#bd93f9','#ff79c6','#8be9fd','#ffb86c','#6272a4'] },
+  { key: 'tokyonight', name: 'tokyo night',
+    palette: ['#1a1b26','#c0caf5','#f7768e','#9ece6a','#e0af68','#7aa2f7','#bb9af7','#7dcfff','#ff9e64','#565f89'] },
+  { key: 'catppuccin', name: 'catppuccin mocha',
+    palette: ['#1e1e2e','#cdd6f4','#f38ba8','#a6e3a1','#f9e2af','#89b4fa','#cba6f7','#94e2d5','#fab387','#6c7086'] },
+  { key: 'kanagawa', name: 'kanagawa',
+    palette: ['#1f1f28','#dcd7ba','#c34043','#76946a','#c0a36e','#7e9cd8','#957fb8','#6a9589','#ffa066','#727169'] },
+  { key: 'everforest', name: 'everforest dark',
+    palette: ['#2d353b','#d3c6aa','#e67e80','#a7c080','#dbbc7f','#7fbbb3','#d699b6','#83c092','#e69875','#859289'] },
+  { key: 'rosepine', name: 'rosé pine',
+    palette: ['#191724','#e0def4','#eb6f92','#31748f','#f6c177','#9ccfd8','#c4a7e7','#ebbcba','#f6c177','#6e6a86'] },
+  { key: 'onedark', name: 'onedark',
+    palette: ['#282c34','#abb2bf','#e06c75','#98c379','#e5c07b','#61afef','#c678dd','#56b6c2','#d19a66','#5c6370'] },
+  { key: 'solarized-dark', name: 'solarized dark',
+    palette: ['#002b36','#93a1a1','#dc322f','#859900','#b58900','#268bd2','#d33682','#2aa198','#cb4b16','#586e75'] },
+  { key: 'solarized-light', name: 'solarized light',
+    palette: ['#fdf6e3','#657b83','#dc322f','#859900','#b58900','#268bd2','#d33682','#2aa198','#cb4b16','#93a1a1'] },
+];
+
+const LAYERS = [
+  { key: 'paper',   label: 'paper — the field' },
+  { key: 'frame',   label: 'frame — the grid' },
+  { key: 'points',  label: 'points — nine choices' },
+  { key: 'neutral', label: 'neutral now — the live box' },
+  { key: 'flow',    label: 'flow — the breath' },
+];
+
+// default mapping for terminal schemes: bg→paper, gray→frame, fg→points/flow, red slot→neutral
+function defaultMap(s) {
+  if (s.map) return { ...s.map };
+  const p = s.palette;
+  return { paper: p[0], frame: p[9], points: p[1], neutral: p[2], flow: p[1] };
+}
+
+/* ---------------- state ---------------- */
+
+let scheme = SCHEMES[0];
+let map = defaultMap(scheme);
+let tab = 'scheme';
+
+/* ---------------- the symbol ---------------- */
+
+const FLOW_PATHS = [
+  'M 52 16 Q 66 10 79 16', 'M 19 82 Q 33 88 46 82',
+  'M 49 46 Q 43 33 49 19', 'M 49 52 Q 55 66 49 79',
+  'M 52 16 Q 66 22 79 16', 'M 19 82 Q 33 76 46 82',
+  'M 49 46 Q 55 33 49 19', 'M 49 52 Q 42 66 49 79',
+  'M 16 19 Q 10 33 16 46', 'M 19 49 Q 33 55 46 49',
+  'M 52 49 Q 66 43 79 49', 'M 82 52 Q 88 66 82 79',
+  'M 16 19 Q 22 33 16 46', 'M 19 49 Q 33 42 46 49',
+  'M 52 49 Q 66 55 79 49', 'M 82 52 Q 76 66 82 79',
+];
+
+const POINTS = [
+  [16,16],[49,16],[82,16],
+  [16,49],        [82,49],
+  [16,82],[49,82],[82,82],
+];
+
+function symbolSVG(m, size) {
+  const paths = FLOW_PATHS.map(d => `<path d="${d}"/>`).join('\n      ');
+  const pts = POINTS.map(([x,y]) => `<circle cx="${x}" cy="${y}" r="3"/>`).join('\n      ');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="${m.paper}"/>
+    <g stroke="${m.frame}" stroke-width="0.5" opacity="0.45" fill="none">
+      <line x1="99" y1="33" x2="1" y2="33"/>
+      <line x1="99" y1="66" x2="1" y2="66"/>
+      <line x1="33" y1="1" x2="33" y2="99"/>
+      <line x1="66" y1="1" x2="66" y2="99"/>
+    </g>
+    <rect x="1" y="1" width="98" height="98" fill="none" stroke="${m.frame}" stroke-width="0.7"/>
+    <g fill="none" stroke="${m.flow}" stroke-width="0.6" stroke-linecap="round">
+      ${paths}
+    </g>
+    <g fill="${m.paper}" stroke="${m.points}" stroke-width="0.9">
+      ${pts}
+    </g>
+    <circle cx="49" cy="49" r="3" fill="${m.neutral}" stroke="${m.neutral}" stroke-width="0.9"/>
+  </svg>`;
+}
+
+/* ---------------- brochure ---------------- */
+
+function brochureHTML(m, schemeName) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codeparity — The Religion of 9 Choices</title>
+<style>
+  :root {
+    --paper: ${m.paper};
+    --frame: ${m.frame};
+    --points: ${m.points};
+    --neutral: ${m.neutral};
+    --flow: ${m.flow};
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--points);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  .mono {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--neutral);
+  }
+  main { max-width: 40rem; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 4rem 0; border-top: 1px solid var(--frame); }
+  section:first-of-type { border-top: none; }
+  h1, h2 { font-weight: normal; }
+  h2 { font-size: 1.35rem; margin: 0.5rem 0 1.6rem; }
+  p + p { margin-top: 1.2em; }
+  em { color: var(--flow); }
+  .hero { text-align: center; padding: 5rem 0 4rem; }
+  .hero svg { width: min(280px, 70vw); height: auto; margin: 0 auto 2.6rem; display: block; }
+  .hero h1 {
+    font-size: 1.1rem; font-family: ui-monospace, Menlo, monospace;
+    letter-spacing: 0.42em; text-transform: uppercase; text-indent: 0.42em;
+  }
+  .hero .sub { margin-top: 0.8rem; color: var(--flow); font-style: italic; }
+  .thesis { margin-top: 3.4rem; font-size: 1.5rem; font-style: italic; line-height: 1.4; }
+  dl dt {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    margin-top: 2rem; color: var(--neutral);
+  }
+  dl dd { margin-top: 0.4rem; color: var(--flow); }
+  dl.gloss dt { font-family: inherit; font-style: italic; font-size: 1rem;
+    letter-spacing: 0; text-transform: none; color: var(--points); margin-top: 1.5rem; }
+  footer {
+    border-top: 1px solid var(--frame);
+    padding: 3.5rem 1.5rem 4.5rem; text-align: center;
+    color: var(--flow); font-style: italic;
+  }
+  .theme-tag { margin-top: 1.6rem; font-size: 0.72rem; font-style: normal;
+    font-family: ui-monospace, Menlo, monospace; letter-spacing: 0.18em;
+    text-transform: uppercase; opacity: 0.7; }
+  @media print { section { padding: 2.2rem 0; } .hero { padding: 2.5rem 0; } }
+</style>
+</head>
+<body>
+<main>
+
+  <section class="hero">
+    ${symbolSVG(m, 280)}
+    <h1>Codeparity</h1>
+    <p class="sub">The religion of 9 choices</p>
+    <p class="thesis">Discover the nine choices<br>you&rsquo;re making right now.</p>
+  </section>
+
+  <section>
+    <p class="mono">The symbol</p>
+    <h2>An ancient wheel, re-read as a grid</h2>
+    <p>The horizontal axis is time: <em>past, now, future</em>. The vertical
+       axis is the self, in three layers: <em>feels, how, why</em> &mdash;
+       what you feel, how you act, why you act.</p>
+    <p>Cross them and you get nine boxes. Nine live choices, always running.
+       Eight of them are stories. One of them &mdash; the centre, the
+       <em>Neutral Now</em> &mdash; is the only box where anything can
+       actually be done.</p>
+    <p>The grid is the map. The torus is what the map looks like once it is
+       actually alive and running. <em>A grid that learned to breathe.</em></p>
+  </section>
+
+  <section>
+    <p class="mono">The premise</p>
+    <h2>Parity, not happiness</h2>
+    <p>A religion is just a system that tells you what to do with your time,
+       and why. This one says so upfront.</p>
+    <p>The goal is not happiness &mdash; dopamine, a moving target. The goal
+       is <em>parity</em>: balance with your environment. You are born in
+       debt to <em>habitus</em>, the code you did not write. The practice is
+       debugging that inheritance, one live choice at a time.</p>
+  </section>
+
+  <section>
+    <p class="mono">How to read it</p>
+    <h2>Six symbols. Everything else is commentary.</h2>
+    <dl>
+      <dt>The Grid</dt>
+      <dd>Three layers of self &times; three moments of time. Nine live choices, always running.</dd>
+      <dt>The Torus</dt>
+      <dd>A donut of energy that feeds itself. The grid, breathing. The Neutral Now sits at its still centre.</dd>
+      <dt>0 and 1</dt>
+      <dd>Not a fraction &mdash; a relationship. 0 is the undivided source. 1 is the first division, the first &ldquo;me.&rdquo;</dd>
+      <dt>Saturn · Earth · Sun · God</dt>
+      <dd>Four stacked fathers: Saturn builds the body, Earth holds the ground, the Sun teaches the mind, God settles the ledger.</dd>
+      <dt>The Dog</dt>
+      <dd>Not a chosen metaphor &mdash; a literal street dog. Layer 0, run honestly: feeling without a story built on top of it.</dd>
+      <dt>Death, the last debug</dt>
+      <dd>The last commit. Whatever was running when you closed the terminal is what got saved.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <p class="mono">Vocabulary</p>
+    <h2>Kept as-is, edges on</h2>
+    <dl class="gloss">
+      <dt>habitus</dt>
+      <dd>The pre-set inputs you&rsquo;re born into; the code you didn&rsquo;t write.</dd>
+      <dt>karm / karma / dharma</dt>
+      <dd>An action; its abstract result; purpose chosen on purpose &mdash; the opposite of repetition.</dd>
+      <dt>neutral now</dt>
+      <dd>The one live box on the grid; the fulcrum, where soul is lost to ego or reclaimed by attention.</dd>
+      <dt>baldies</dt>
+      <dd>The archetype running the Middle-Class Algorithm flawlessly, without noticing it&rsquo;s an algorithm.</dd>
+      <dt>sigma</dt>
+      <dd>The archetype who breaks the loop.</dd>
+      <dt>matrix 6 / 6G</dt>
+      <dd>The current social-attention system, engineered for the <em>feeling</em> of choice rather than its removal.</dd>
+    </dl>
+  </section>
+
+</main>
+
+<footer>
+  <p>Where it sounds occult, that&rsquo;s because the thing it&rsquo;s describing
+     is occult &mdash; hidden, not mystical.<br>
+     You don&rsquo;t need to believe. You just need to be willing to debug.</p>
+  <p class="theme-tag">theme · ${schemeName}</p>
+  <p class="theme-tag">the book &mdash; coming soon at codeparity.com</p>
+</footer>
+</body>
+</html>`;
+}
+
+/* ---------------- panel views ---------------- */
+
+const $preview = document.getElementById('preview');
+const $pbody = document.getElementById('pbody');
+const navBtns = document.querySelectorAll('.pnav button');
+
+function schemeViewHTML() {
+  const rows = SCHEMES.map(s => {
+    const strip = s.palette.map(c => `<i style="background:${c}"></i>`).join('');
+    return `<button class="scheme" data-key="${s.key}">
+      <span class="strip">${strip}</span><span>${s.name}</span></button>`;
+  }).join('');
+  return `
+    <span class="mono kicker">colorscheme</span>
+    <h2>Pick your terminal</h2>
+    <div class="schemes">${rows}</div>`;
+}
+
+function layersViewHTML() {
+  const rows = LAYERS.map(l => {
+    const swatches = scheme.palette.map(c =>
+      `<button class="swatch" data-layer="${l.key}" data-color="${c}" style="background:${c}" title="${c}"></button>`
+    ).join('');
+    return `<div class="layer">
+      <div class="name"><i id="chip-${l.key}"></i>${l.label}</div>
+      <div class="swatches">${swatches}
+        <input type="color" id="custom-${l.key}" title="custom color">
+      </div></div>`;
+  }).join('');
+  return `
+    <span class="mono kicker">layers</span>
+    <h2>Map the parts</h2>
+    <div class="layers">${rows}</div>`;
+}
+
+function wireTab() {
+  $pbody.querySelectorAll('.scheme').forEach(b =>
+    b.addEventListener('click', () => {
+      scheme = SCHEMES.find(s => s.key === b.dataset.key);
+      map = defaultMap(scheme);
+      updateStates();
+    }));
+  $pbody.querySelectorAll('.swatch').forEach(b =>
+    b.addEventListener('click', () => { map[b.dataset.layer] = b.dataset.color; updateStates(); }));
+  LAYERS.forEach(l => {
+    const inp = document.getElementById('custom-' + l.key);
+    if (inp) inp.addEventListener('input', e => { map[l.key] = e.target.value; updateStates(); });
+  });
+}
+
+function updateStates() {
+  $preview.innerHTML = symbolSVG(map, 600);
+  $pbody.querySelectorAll('.scheme').forEach(b =>
+    b.classList.toggle('active', b.dataset.key === scheme.key));
+  $pbody.querySelectorAll('.swatch').forEach(b =>
+    b.classList.toggle('on', map[b.dataset.layer] === b.dataset.color));
+  LAYERS.forEach(l => {
+    const chip = document.getElementById('chip-' + l.key);
+    const inp = document.getElementById('custom-' + l.key);
+    if (chip) chip.style.background = map[l.key];
+    if (inp) inp.value = map[l.key];
+  });
+}
+
+function showTab(t) {
+  tab = t;
+  navBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  $pbody.classList.add('fade');
+  setTimeout(() => {
+    $pbody.innerHTML = t === 'scheme' ? schemeViewHTML() : layersViewHTML();
+    $pbody.scrollTop = 0;
+    wireTab();
+    updateStates();
+    $pbody.classList.remove('fade');
+  }, 160);
+}
+
+navBtns.forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+/* ---------------- downloads ---------------- */
+
+function save(blob, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+document.getElementById('dl-svg').addEventListener('click', () => {
+  save(new Blob([symbolSVG(map, 600)], { type: 'image/svg+xml' }),
+       `codeparity-symbol-${scheme.key}.svg`);
+});
+
+document.getElementById('dl-png').addEventListener('click', () => {
+  const url = URL.createObjectURL(
+    new Blob([symbolSVG(map, 1200)], { type: 'image/svg+xml' }));
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 1200;
+    c.getContext('2d').drawImage(img, 0, 0, 1200, 1200);
+    URL.revokeObjectURL(url);
+    c.toBlob(b => save(b, `codeparity-symbol-${scheme.key}.png`), 'image/png');
+  };
+  img.src = url;
+});
+
+document.getElementById('dl-brochure').addEventListener('click', () => {
+  save(new Blob([brochureHTML(map, scheme.name)], { type: 'text/html' }),
+       `codeparity-${scheme.key}.html`);
+});
+
+/* ---------------- init ---------------- */
+
+const params = new URLSearchParams(location.search);
+const preselect = SCHEMES.find(s => s.key === params.get('scheme'));
+if (preselect) { scheme = preselect; map = defaultMap(preselect); }
+if (params.get('tab') === 'layers') tab = 'layers';
+
+navBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+$pbody.innerHTML = tab === 'scheme' ? schemeViewHTML() : layersViewHTML();
+wireTab();
+updateStates();
+</script>
+</body>
+</html>
