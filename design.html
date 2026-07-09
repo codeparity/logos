@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Design your symbol — Codeparity</title>
-<meta name="description" content="Style the Codeparity grid in your own terminal colorscheme. Download your symbol and the brochure in your theme.">
+<meta name="description" content="The ancient grid, in the colors your terminal already taught you. Take the symbol with you.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://logos.codeparity.com/design.html">
+<meta property="og:title" content="Design your symbol — Codeparity">
+<meta property="og:description" content="The ancient grid, in the colors your terminal already taught you. Take the symbol with you.">
+<meta property="og:image" content="https://logos.codeparity.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   /* Grey ramp — codeparity_pallette.gpl */
   :root {
@@ -270,7 +278,7 @@
 const SCHEMES = [
   { key: 'greyscale', name: 'greyscale (default)',
     palette: ['#f4f4f4','#191919','#323232','#4b4b4b','#646464','#7d7d7d','#969696','#afafaf','#c8c8c8','#e1e1e1'],
-    map: { paper:'#f4f4f4', frame:'#4b4b4b', points:'#191919', neutral:'#191919', flow:'#191919' } },
+    map: { paper:'#f4f4f4', frame:'#4b4b4b', points:'#191919', neutral:'#191919', solve:'#4b4b4b', coagula:'#191919' } },
   { key: 'gruvbox', name: 'gruvbox dark',
     palette: ['#282828','#ebdbb2','#cc241d','#98971a','#d79921','#458588','#b16286','#689d6a','#d65d0e','#928374'] },
   { key: 'nord', name: 'nord',
@@ -300,14 +308,16 @@ const LAYERS = [
   { key: 'frame',   label: 'frame — the grid' },
   { key: 'points',  label: 'points — nine choices' },
   { key: 'neutral', label: 'neutral now — the live box' },
-  { key: 'flow',    label: 'flow — the breath' },
+  { key: 'solve',   label: 'solve — the current that takes apart' },
+  { key: 'coagula', label: 'coagula — the current that binds' },
 ];
 
-// default mapping for terminal schemes: bg→paper, gray→frame, fg→points/flow, red slot→neutral
+// default mapping for terminal schemes: bg→paper, gray→frame, fg→points,
+// red→neutral, orange→solve (dissolves), blue→coagula (binds)
 function defaultMap(s) {
   if (s.map) return { ...s.map };
   const p = s.palette;
-  return { paper: p[0], frame: p[9], points: p[1], neutral: p[2], flow: p[1] };
+  return { paper: p[0], frame: p[9], points: p[1], neutral: p[2], solve: p[8], coagula: p[5] };
 }
 
 /* ---------------- state ---------------- */
@@ -318,15 +328,19 @@ let tab = 'scheme';
 
 /* ---------------- the symbol ---------------- */
 
-const FLOW_PATHS = [
-  'M 52 16 Q 66 10 79 16', 'M 19 82 Q 33 88 46 82',
-  'M 49 46 Q 43 33 49 19', 'M 49 52 Q 55 66 49 79',
-  'M 52 16 Q 66 22 79 16', 'M 19 82 Q 33 76 46 82',
-  'M 49 46 Q 55 33 49 19', 'M 49 52 Q 42 66 49 79',
-  'M 16 19 Q 10 33 16 46', 'M 19 49 Q 33 55 46 49',
-  'M 52 49 Q 66 43 79 49', 'M 82 52 Q 88 66 82 79',
-  'M 16 19 Q 22 33 16 46', 'M 19 49 Q 33 42 46 49',
-  'M 52 49 Q 66 55 79 49', 'M 82 52 Q 76 66 82 79',
+// coagula: top-left corner → left → centre → up → top-right
+const COAGULA_PATHS = [
+  'M 16 19 Q 10 33 16 46', 'M 16 19 Q 22 33 16 46',
+  'M 19 49 Q 33 55 46 49', 'M 19 49 Q 33 42 46 49',
+  'M 49 46 Q 43 33 49 19', 'M 49 46 Q 55 33 49 19',
+  'M 52 16 Q 66 10 79 16', 'M 52 16 Q 66 22 79 16',
+];
+// solve: bottom-left → bottom → centre → right → bottom-right
+const SOLVE_PATHS = [
+  'M 19 82 Q 33 88 46 82', 'M 19 82 Q 33 76 46 82',
+  'M 49 52 Q 55 66 49 79', 'M 49 52 Q 42 66 49 79',
+  'M 52 49 Q 66 43 79 49', 'M 52 49 Q 66 55 79 49',
+  'M 82 52 Q 88 66 82 79', 'M 82 52 Q 76 66 82 79',
 ];
 
 const POINTS = [
@@ -336,7 +350,8 @@ const POINTS = [
 ];
 
 function symbolSVG(m, size) {
-  const paths = FLOW_PATHS.map(d => `<path d="${d}"/>`).join('\n      ');
+  const coagula = COAGULA_PATHS.map(d => `<path d="${d}"/>`).join('\n      ');
+  const solve = SOLVE_PATHS.map(d => `<path d="${d}"/>`).join('\n      ');
   const pts = POINTS.map(([x,y]) => `<circle cx="${x}" cy="${y}" r="3"/>`).join('\n      ');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
     <rect width="100" height="100" fill="${m.paper}"/>
@@ -347,8 +362,11 @@ function symbolSVG(m, size) {
       <line x1="66" y1="1" x2="66" y2="99"/>
     </g>
     <rect x="1" y="1" width="98" height="98" fill="none" stroke="${m.frame}" stroke-width="0.7"/>
-    <g fill="none" stroke="${m.flow}" stroke-width="0.6" stroke-linecap="round">
-      ${paths}
+    <g fill="none" stroke="${m.coagula}" stroke-width="0.6" stroke-linecap="round">
+      ${coagula}
+    </g>
+    <g fill="none" stroke="${m.solve}" stroke-width="0.6" stroke-linecap="round">
+      ${solve}
     </g>
     <g fill="${m.paper}" stroke="${m.points}" stroke-width="0.9">
       ${pts}
@@ -372,7 +390,8 @@ function brochureHTML(m, schemeName) {
     --frame: ${m.frame};
     --points: ${m.points};
     --neutral: ${m.neutral};
-    --flow: ${m.flow};
+    --solve: ${m.solve};
+    --coagula: ${m.coagula};
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -391,27 +410,27 @@ function brochureHTML(m, schemeName) {
   h1, h2 { font-weight: normal; }
   h2 { font-size: 1.35rem; margin: 0.5rem 0 1.6rem; }
   p + p { margin-top: 1.2em; }
-  em { color: var(--flow); }
+  em { color: var(--coagula); }
   .hero { text-align: center; padding: 5rem 0 4rem; }
   .hero svg { width: min(280px, 70vw); height: auto; margin: 0 auto 2.6rem; display: block; }
   .hero h1 {
     font-size: 1.1rem; font-family: ui-monospace, Menlo, monospace;
     letter-spacing: 0.42em; text-transform: uppercase; text-indent: 0.42em;
   }
-  .hero .sub { margin-top: 0.8rem; color: var(--flow); font-style: italic; }
+  .hero .sub { margin-top: 0.8rem; color: var(--points); font-style: italic; }
   .thesis { margin-top: 3.4rem; font-size: 1.5rem; font-style: italic; line-height: 1.4; }
   dl dt {
     font-family: ui-monospace, Menlo, monospace;
     font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
     margin-top: 2rem; color: var(--neutral);
   }
-  dl dd { margin-top: 0.4rem; color: var(--flow); }
+  dl dd { margin-top: 0.4rem; color: var(--points); }
   dl.gloss dt { font-family: inherit; font-style: italic; font-size: 1rem;
     letter-spacing: 0; text-transform: none; color: var(--points); margin-top: 1.5rem; }
   footer {
     border-top: 1px solid var(--frame);
     padding: 3.5rem 1.5rem 4.5rem; text-align: center;
-    color: var(--flow); font-style: italic;
+    color: var(--points); font-style: italic;
   }
   .theme-tag { margin-top: 1.6rem; font-size: 0.72rem; font-style: normal;
     font-family: ui-monospace, Menlo, monospace; letter-spacing: 0.18em;
@@ -439,6 +458,10 @@ function brochureHTML(m, schemeName) {
        Eight of them are stories. One of them &mdash; the centre, the
        <em>Neutral Now</em> &mdash; is the only box where anything can
        actually be done.</p>
+    <p>Two currents cross at that centre. <em>Solve</em> rises from the
+       bottom and takes apart; <em>coagula</em> enters from the top-left
+       and binds. <em>Solve et coagula</em> &mdash; the oldest instruction
+       there is.</p>
     <p>The grid is the map. The torus is what the map looks like once it is
        actually alive and running. <em>A grid that learned to breathe.</em></p>
   </section>

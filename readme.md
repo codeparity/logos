@@ -7,7 +7,9 @@ the doorway, hosted on GitHub Pages at
 
 The symbol: an ancient wheel re-read as a grid. Time runs left to right
 (past · now · future), the self runs top to bottom (why · how · feels).
-Nine boxes, always running.
+Nine boxes, always running. Two currents cross at the centre: *solve*
+rises from the bottom and takes apart; *coagula* enters from the
+top-left and binds.
 
 ## Files
 
