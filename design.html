@@ -328,19 +328,19 @@ let tab = 'scheme';
 
 /* ---------------- the symbol ---------------- */
 
-// coagula: top-left corner → left → centre → up → top-right
-const COAGULA_PATHS = [
+// solve — the main diagonal: top-left → left-mid → centre → right-mid → bottom-right
+const SOLVE_PATHS = [
   'M 16 19 Q 10 33 16 46', 'M 16 19 Q 22 33 16 46',
   'M 19 49 Q 33 55 46 49', 'M 19 49 Q 33 42 46 49',
-  'M 49 46 Q 43 33 49 19', 'M 49 46 Q 55 33 49 19',
-  'M 52 16 Q 66 10 79 16', 'M 52 16 Q 66 22 79 16',
-];
-// solve: bottom-left → bottom → centre → right → bottom-right
-const SOLVE_PATHS = [
-  'M 19 82 Q 33 88 46 82', 'M 19 82 Q 33 76 46 82',
-  'M 49 52 Q 55 66 49 79', 'M 49 52 Q 42 66 49 79',
   'M 52 49 Q 66 43 79 49', 'M 52 49 Q 66 55 79 49',
   'M 82 52 Q 88 66 82 79', 'M 82 52 Q 76 66 82 79',
+];
+// coagula — the counter-diagonal: bottom-left → bottom-mid → centre → top-mid → top-right
+const COAGULA_PATHS = [
+  'M 19 82 Q 33 88 46 82', 'M 19 82 Q 33 76 46 82',
+  'M 49 52 Q 55 66 49 79', 'M 49 52 Q 42 66 49 79',
+  'M 49 46 Q 43 33 49 19', 'M 49 46 Q 55 33 49 19',
+  'M 52 16 Q 66 10 79 16', 'M 52 16 Q 66 22 79 16',
 ];
 
 const POINTS = [
@@ -458,8 +458,8 @@ function brochureHTML(m, schemeName) {
        Eight of them are stories. One of them &mdash; the centre, the
        <em>Neutral Now</em> &mdash; is the only box where anything can
        actually be done.</p>
-    <p>Two currents cross at that centre. <em>Solve</em> rises from the
-       bottom and takes apart; <em>coagula</em> enters from the top-left
+    <p>Two currents cross at that centre. <em>Solve</em> descends from the
+       top-left and takes apart; <em>coagula</em> rises from the bottom-left
        and binds. <em>Solve et coagula</em> &mdash; the oldest instruction
        there is.</p>
     <p>The grid is the map. The torus is what the map looks like once it is

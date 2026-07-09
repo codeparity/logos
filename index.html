@@ -86,8 +86,8 @@
   .logo .cube   { fill: none; stroke: var(--g30); stroke-width: 0.7; }
   .logo .points { fill: var(--g95); stroke: var(--g10); stroke-width: 0.9; }
   .logo .flow    { fill: none; stroke-width: 0.6; stroke-linecap: round; }
-  .logo .coagula { stroke: var(--g10); } /* the current that binds — enters top-left */
-  .logo .solve   { stroke: var(--g30); } /* the current that takes apart — rises from the bottom */
+  .logo .coagula { stroke: var(--g10); } /* binds — rises bottom-left → top-right */
+  .logo .solve   { stroke: var(--g30); } /* takes apart — descends top-left → bottom-right */
   .logo .neutral { fill: var(--g10); }
   .logo .points circle.lit { fill: var(--g10); }
 
@@ -257,27 +257,27 @@
         <line x1="33" y1="1" x2="33" y2="99"/>
         <line x1="66" y1="1" x2="66" y2="99"/>
       </g>
-      <!-- coagula — top-left corner → left → centre → up → top-right -->
-      <g class="flow coagula">
-        <path class="inner" d="M 49 46 Q 43 33 49 19"/>
-        <path class="inner" d="M 49 46 Q 55 33 49 19"/>
-        <path class="inner rev" d="M 19 49 Q 33 55 46 49"/>
-        <path class="inner rev" d="M 19 49 Q 33 42 46 49"/>
-        <path class="outer" d="M 52 16 Q 66 10 79 16"/>
-        <path class="outer" d="M 52 16 Q 66 22 79 16"/>
+      <!-- solve — the main diagonal: top-left → left-mid → centre → right-mid → bottom-right -->
+      <g class="flow solve">
         <path class="outer rev" d="M 16 19 Q 10 33 16 46"/>
         <path class="outer rev" d="M 16 19 Q 22 33 16 46"/>
-      </g>
-      <!-- solve — bottom-left → bottom → centre → right → bottom-right -->
-      <g class="flow solve">
-        <path class="inner" d="M 49 52 Q 55 66 49 79"/>
-        <path class="inner" d="M 49 52 Q 42 66 49 79"/>
+        <path class="inner rev" d="M 19 49 Q 33 55 46 49"/>
+        <path class="inner rev" d="M 19 49 Q 33 42 46 49"/>
         <path class="inner" d="M 52 49 Q 66 43 79 49"/>
         <path class="inner" d="M 52 49 Q 66 55 79 49"/>
-        <path class="outer rev" d="M 19 82 Q 33 88 46 82"/>
-        <path class="outer rev" d="M 19 82 Q 33 76 46 82"/>
         <path class="outer" d="M 82 52 Q 88 66 82 79"/>
         <path class="outer" d="M 82 52 Q 76 66 82 79"/>
+      </g>
+      <!-- coagula — the counter-diagonal: bottom-left → bottom-mid → centre → top-mid → top-right -->
+      <g class="flow coagula">
+        <path class="outer rev" d="M 19 82 Q 33 88 46 82"/>
+        <path class="outer rev" d="M 19 82 Q 33 76 46 82"/>
+        <path class="inner" d="M 49 52 Q 55 66 49 79"/>
+        <path class="inner" d="M 49 52 Q 42 66 49 79"/>
+        <path class="inner" d="M 49 46 Q 43 33 49 19"/>
+        <path class="inner" d="M 49 46 Q 55 33 49 19"/>
+        <path class="outer" d="M 52 16 Q 66 10 79 16"/>
+        <path class="outer" d="M 52 16 Q 66 22 79 16"/>
       </g>
       <g class="points">
         <circle class="corner" cx="16" cy="16" r="3"/>
@@ -341,8 +341,8 @@ const VIEWS = {
        Time runs left to right &mdash; <em>past, now, future</em>.
        The self runs top to bottom &mdash; <em>why, how, feels</em>.
        Nine boxes, always running. Two currents cross at the centre:
-       <em>solve</em> rises from the bottom and takes apart;
-       <em>coagula</em> enters from the top-left and binds.</p>
+       <em>solve</em> descends from the top-left and takes apart;
+       <em>coagula</em> rises from the bottom-left and binds.</p>
     <p><span class="mono">click any box &mdash;</span></p>
     <p class="chapter">The full reading is still being written &mdash; ${BOOK}.</p>`,
 
@@ -406,8 +406,9 @@ const VIEWS = {
       <dt>neutral now</dt>
       <dd>The one live box; where soul is lost to ego or reclaimed by attention.</dd>
       <dt>solve &middot; coagula</dt>
-      <dd>The wheel&rsquo;s two currents. <em>Solve</em> rises from the bottom
-          and takes apart; <em>coagula</em> enters from the top-left and binds.</dd>
+      <dd>The wheel&rsquo;s two currents, crossing at the centre.
+          <em>Solve</em> descends from the top-left and takes apart;
+          <em>coagula</em> rises from the bottom-left and binds.</dd>
       <dt>baldies</dt>
       <dd>Running the Middle-Class Algorithm flawlessly, without noticing it&rsquo;s an algorithm.</dd>
       <dt>sigma</dt>
