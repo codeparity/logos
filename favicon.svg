@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<!-- The Codeparity symbol, icon weight — greyscale ramp from codeparity_pallette.gpl.
+     Base state is the finished symbol; where CSS animation runs (Firefox tabs),
+     it re-enacts the draw: centre point → inner arms → mid points → outer arms
+     → corner points. -->
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .flow path {
+      stroke-dasharray: 34;
+      animation: draw 1.1s ease-out both;
+      animation-delay: 0.35s;
+    }
+    .flow path.rev { animation-name: draw-rev; }
+    .flow path.outer { animation-delay: 1.4s; }
+
+    .pt { animation: appear 0.4s ease-out both; }
+    .pt.neutral { animation-delay: 0.05s; }
+    .pt.mid    { animation-delay: 1.25s; }
+    .pt.corner { animation-delay: 2.3s; }
+
+    @keyframes draw     { from { stroke-dashoffset: 34; }  to { stroke-dashoffset: 0; } }
+    @keyframes draw-rev { from { stroke-dashoffset: -34; } to { stroke-dashoffset: 0; } }
+    @keyframes appear   { from { opacity: 0; } to { opacity: 1; } }
+  }
+</style>
+<rect width="100" height="100" fill="#f4f4f4"/>
+<g stroke="#e1e1e1" stroke-width="1.4" fill="none">
+  <line x1="99" y1="33" x2="1" y2="33"/>
+  <line x1="99" y1="66" x2="1" y2="66"/>
+  <line x1="33" y1="1" x2="33" y2="99"/>
+  <line x1="66" y1="1" x2="66" y2="99"/>
+</g>
+<rect x="2.5" y="2.5" width="95" height="95" fill="none" stroke="#4b4b4b" stroke-width="2"/>
+<g class="flow" fill="none" stroke-width="2.4" stroke-linecap="round">
+  <!-- solve — descends top-left → bottom-right -->
+  <g stroke="#4b4b4b">
+    <path class="outer rev" d="M 16 19 Q 10 33 16 46"/>
+    <path class="outer rev" d="M 16 19 Q 22 33 16 46"/>
+    <path class="rev" d="M 19 49 Q 33 55 46 49"/>
+    <path class="rev" d="M 19 49 Q 33 42 46 49"/>
+    <path d="M 52 49 Q 66 43 79 49"/>
+    <path d="M 52 49 Q 66 55 79 49"/>
+    <path class="outer" d="M 82 52 Q 88 66 82 79"/>
+    <path class="outer" d="M 82 52 Q 76 66 82 79"/>
+  </g>
+  <!-- coagula — rises bottom-left → top-right -->
+  <g stroke="#191919">
+    <path class="outer rev" d="M 19 82 Q 33 88 46 82"/>
+    <path class="outer rev" d="M 19 82 Q 33 76 46 82"/>
+    <path d="M 49 52 Q 55 66 49 79"/>
+    <path d="M 49 52 Q 42 66 49 79"/>
+    <path d="M 49 46 Q 43 33 49 19"/>
+    <path d="M 49 46 Q 55 33 49 19"/>
+    <path class="outer" d="M 52 16 Q 66 10 79 16"/>
+    <path class="outer" d="M 52 16 Q 66 22 79 16"/>
+  </g>
+</g>
+<g fill="#f4f4f4" stroke="#191919" stroke-width="2.4">
+  <circle class="pt corner" cx="16" cy="16" r="4.5"/>
+  <circle class="pt mid"    cx="49" cy="16" r="4.5"/>
+  <circle class="pt corner" cx="82" cy="16" r="4.5"/>
+  <circle class="pt mid"    cx="16" cy="49" r="4.5"/>
+  <circle class="pt neutral" cx="49" cy="49" r="4.5" fill="#191919"/>
+  <circle class="pt mid"    cx="82" cy="49" r="4.5"/>
+  <circle class="pt corner" cx="16" cy="82" r="4.5"/>
+  <circle class="pt mid"    cx="49" cy="82" r="4.5"/>
+  <circle class="pt corner" cx="82" cy="82" r="4.5"/>
+</g>
+</svg>

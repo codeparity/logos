@@ -13,6 +13,11 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#f4f4f4">
 <style>
   /* Grey ramp — codeparity_pallette.gpl */
   :root {
@@ -729,6 +734,95 @@ $pbody.innerHTML = tab === 'scheme' ? schemeViewHTML() : layersViewHTML();
 wireTab();
 renderPreview(true);
 updateStates();
+</script>
+<script>
+'use strict';
+/* animated favicon — replays the symbol's draw in the tab icon once per
+   visit, then settles on the finished mark. Firefox animates favicon.svg
+   natively; this covers browsers that only take static favicons. */
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cnv = document.createElement('canvas');
+  cnv.width = cnv.height = 64;
+  const ctx = cnv.getContext('2d');
+  if (!ctx) return;
+
+  const L = 34, ARM_DUR = 1100, PT_DUR = 400, END = 2800;
+  // [path, delay, rev] — rev draws toward the centre's far end, as on the page
+  const SOLVE = [
+    ['M 16 19 Q 10 33 16 46', 1400, 1], ['M 16 19 Q 22 33 16 46', 1400, 1],
+    ['M 19 49 Q 33 55 46 49', 350, 1],  ['M 19 49 Q 33 42 46 49', 350, 1],
+    ['M 52 49 Q 66 43 79 49', 350, 0],  ['M 52 49 Q 66 55 79 49', 350, 0],
+    ['M 82 52 Q 88 66 82 79', 1400, 0], ['M 82 52 Q 76 66 82 79', 1400, 0],
+  ];
+  const COAGULA = [
+    ['M 19 82 Q 33 88 46 82', 1400, 1], ['M 19 82 Q 33 76 46 82', 1400, 1],
+    ['M 49 52 Q 55 66 49 79', 350, 0],  ['M 49 52 Q 42 66 49 79', 350, 0],
+    ['M 49 46 Q 43 33 49 19', 350, 0],  ['M 49 46 Q 55 33 49 19', 350, 0],
+    ['M 52 16 Q 66 10 79 16', 1400, 0], ['M 52 16 Q 66 22 79 16', 1400, 0],
+  ];
+  const ARMS = SOLVE.map(([d, t0, rev]) => ({ p: new Path2D(d), t0, rev, c: '#4b4b4b' }))
+    .concat(COAGULA.map(([d, t0, rev]) => ({ p: new Path2D(d), t0, rev, c: '#191919' })));
+  // [x, y, delay]
+  const PTS = [
+    [49, 49, 50],
+    [49, 16, 1250], [16, 49, 1250], [82, 49, 1250], [49, 82, 1250],
+    [16, 16, 2300], [82, 16, 2300], [16, 82, 2300], [82, 82, 2300],
+  ];
+
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  document.head.appendChild(link);
+
+  const ease = p => 1 - Math.pow(1 - p, 3);
+  const clamp = v => Math.max(0, Math.min(1, v));
+
+  function paint(t) {
+    ctx.setTransform(0.64, 0, 0, 0.64, 0, 0);
+    ctx.fillStyle = '#f4f4f4';
+    ctx.fillRect(0, 0, 100, 100);
+    ctx.strokeStyle = '#e1e1e1'; ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(1, 33); ctx.lineTo(99, 33); ctx.moveTo(1, 66); ctx.lineTo(99, 66);
+    ctx.moveTo(33, 1); ctx.lineTo(33, 99); ctx.moveTo(66, 1); ctx.lineTo(66, 99);
+    ctx.stroke();
+    ctx.strokeStyle = '#4b4b4b'; ctx.lineWidth = 2;
+    ctx.strokeRect(2.5, 2.5, 95, 95);
+
+    ctx.lineCap = 'round'; ctx.lineWidth = 2.4;
+    for (const a of ARMS) {
+      const e = ease(clamp((t - a.t0) / ARM_DUR));
+      if (e <= 0) continue;
+      ctx.strokeStyle = a.c;
+      if (a.rev) { ctx.setLineDash([L, L]); ctx.lineDashOffset = L + e * L; }
+      else { ctx.setLineDash([e * L, 2 * L]); ctx.lineDashOffset = 0; }
+      ctx.stroke(a.p);
+    }
+    ctx.setLineDash([]);
+
+    for (const [x, y, t0] of PTS) {
+      const a = ease(clamp((t - t0) / PT_DUR));
+      if (a <= 0) continue;
+      ctx.globalAlpha = a;
+      const neutral = x === 49 && y === 49;
+      ctx.beginPath();
+      ctx.arc(x, y, 4.5, 0, 2 * Math.PI);
+      ctx.fillStyle = neutral ? '#191919' : '#f4f4f4';
+      ctx.fill();
+      ctx.strokeStyle = '#191919';
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    link.href = cnv.toDataURL('image/png');
+  }
+
+  const start = performance.now();
+  (function tick() {
+    const t = performance.now() - start;
+    paint(Math.min(t, END));
+    if (t < END) setTimeout(tick, 100);
+  })();
+})();
 </script>
 </body>
 </html>
