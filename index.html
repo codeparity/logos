@@ -133,7 +133,7 @@
   .logo .frame  { stroke: var(--g90); stroke-width: 0.5; }
   .logo .cube   { fill: none; stroke: var(--g30); stroke-width: 0.7; }
   .logo .points { fill: var(--g95); stroke: var(--g10); stroke-width: 0.9; }
-  .logo .flow    { fill: none; stroke-width: 0.6; stroke-linecap: round; }
+  .logo .flow    { stroke-width: 0.6; stroke-linecap: round; fill: var(--g95); } /* white fill — the flow occludes the layers beneath */
   .logo .coagula { stroke: var(--g10); } /* binds — rises bottom-left → top-right */
   .logo .solve   { stroke: var(--g30); } /* takes apart — descends top-left → bottom-right */
   .logo .neutral { fill: var(--g10); }
@@ -151,19 +151,21 @@
     .logo .flow path {
       stroke-dasharray: 34;
       stroke-dashoffset: 34;
-      animation: draw 1.1s ease-out forwards;
-      animation-delay: 0.35s;
+      fill-opacity: 0;
+      animation: draw 1.1s ease-out forwards, fill-in 0.6s ease-out forwards;
+      animation-delay: 0.35s, 1.45s; /* the fill arrives once the arm is drawn */
     }
     .logo .flow path.rev { stroke-dashoffset: -34; }
-    .logo .flow path.outer { animation-delay: 1.4s; }
+    .logo .flow path.outer { animation-delay: 1.4s, 2.5s; }
 
     .logo .points circle { opacity: 0; animation: appear 0.4s ease-out forwards; }
     .logo .points .neutral { animation-delay: 0.05s; }
     .logo .points .mid    { animation-delay: 1.25s; }
     .logo .points .corner { animation-delay: 2.3s; }
 
-    @keyframes draw   { to { stroke-dashoffset: 0; } }
-    @keyframes appear { to { opacity: 1; } }
+    @keyframes draw    { to { stroke-dashoffset: 0; } }
+    @keyframes fill-in { to { fill-opacity: 1; } }
+    @keyframes appear  { to { opacity: 1; } }
   }
 
   /* ---------- right · the panel ---------- */
@@ -313,6 +315,18 @@
         <line x1="33" y1="1" x2="33" y2="99"/>
         <line x1="66" y1="1" x2="66" y2="99"/>
       </g>
+      <g class="points">
+        <circle class="corner" cx="16" cy="16" r="3"/>
+        <circle class="mid" cx="49" cy="16" r="3"/>
+        <circle class="corner" cx="82" cy="16" r="3"/>
+        <circle class="mid" cx="16" cy="49" r="3"/>
+        <circle class="neutral" cx="49" cy="49" r="3"/>
+        <circle class="mid" cx="82" cy="49" r="3"/>
+        <circle class="corner" cx="16" cy="82" r="3"/>
+        <circle class="mid" cx="49" cy="82" r="3"/>
+        <circle class="corner" cx="82" cy="82" r="3"/>
+      </g>
+      <!-- the flow layer sits above the rest -->
       <!-- solve — the main diagonal: top-left → left-mid → centre → right-mid → bottom-right -->
       <g class="flow solve">
         <path class="outer rev" d="M 16 19 Q 10 33 16 46"/>
@@ -334,17 +348,6 @@
         <path class="inner" d="M 49 46 Q 55 33 49 19"/>
         <path class="outer" d="M 52 16 Q 66 10 79 16"/>
         <path class="outer" d="M 52 16 Q 66 22 79 16"/>
-      </g>
-      <g class="points">
-        <circle class="corner" cx="16" cy="16" r="3"/>
-        <circle class="mid" cx="49" cy="16" r="3"/>
-        <circle class="corner" cx="82" cy="16" r="3"/>
-        <circle class="mid" cx="16" cy="49" r="3"/>
-        <circle class="neutral" cx="49" cy="49" r="3"/>
-        <circle class="mid" cx="82" cy="49" r="3"/>
-        <circle class="corner" cx="16" cy="82" r="3"/>
-        <circle class="mid" cx="49" cy="82" r="3"/>
-        <circle class="corner" cx="82" cy="82" r="3"/>
       </g>
       <g class="cells">
         <rect data-cell="why-past"     x="1"  y="1"  width="32" height="32"/>
@@ -634,7 +637,7 @@ if (CELLS[hash]) {
   const ctx = cnv.getContext('2d');
   if (!ctx) return;
 
-  const L = 34, ARM_DUR = 1100, PT_DUR = 400, END = 2800;
+  const L = 34, ARM_DUR = 1100, PT_DUR = 400, END = 2950;
   // [path, delay, rev] — rev draws toward the centre's far end, as on the page
   const SOLVE = [
     ['M 16 19 Q 10 33 16 46', 1400, 1], ['M 16 19 Q 22 33 16 46', 1400, 1],
@@ -677,16 +680,6 @@ if (CELLS[hash]) {
     ctx.strokeRect(2.5, 2.5, 95, 95);
 
     ctx.lineCap = 'round'; ctx.lineWidth = 2.4;
-    for (const a of ARMS) {
-      const e = ease(clamp((t - a.t0) / ARM_DUR));
-      if (e <= 0) continue;
-      ctx.strokeStyle = a.c;
-      if (a.rev) { ctx.setLineDash([L, L]); ctx.lineDashOffset = L + e * L; }
-      else { ctx.setLineDash([e * L, 2 * L]); ctx.lineDashOffset = 0; }
-      ctx.stroke(a.p);
-    }
-    ctx.setLineDash([]);
-
     for (const [x, y, t0] of PTS) {
       const a = ease(clamp((t - t0) / PT_DUR));
       if (a <= 0) continue;
@@ -699,6 +692,24 @@ if (CELLS[hash]) {
       ctx.strokeStyle = '#191919';
       ctx.stroke();
       ctx.globalAlpha = 1;
+    }
+
+    // the flow layer sits above the points; the white fill arrives after the draw
+    for (const a of ARMS) {
+      const e = ease(clamp((t - a.t0) / ARM_DUR));
+      if (e <= 0) continue;
+      const f = ease(clamp((t - a.t0 - ARM_DUR) / PT_DUR));
+      if (f > 0) {
+        ctx.fillStyle = '#f4f4f4';
+        ctx.globalAlpha = f;
+        ctx.fill(a.p);
+        ctx.globalAlpha = 1;
+      }
+      ctx.strokeStyle = a.c;
+      if (a.rev) { ctx.setLineDash([L, L]); ctx.lineDashOffset = L + e * L; }
+      else { ctx.setLineDash([e * L, 2 * L]); ctx.lineDashOffset = 0; }
+      ctx.stroke(a.p);
+      ctx.setLineDash([]);
     }
     link.href = cnv.toDataURL('image/png');
   }
